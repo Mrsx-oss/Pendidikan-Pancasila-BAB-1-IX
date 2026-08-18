@@ -1,2 +1,690 @@
 # Pendidikan-Pancasila-BAB-1-IX
 Menguji Kemampuan dalam Pembelajaran 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detektif Kebangsaan: Investigasi Pancasila</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4ECDA; --cream-deep:#E9DCBE; --ink:#2E2317;
+    --merah:#A82D2D; --merah-deep:#7E1F1F;
+    --emas:#C99A2E; --emas-light:#E8C468;
+    --hijau:#3F6B4A; --hijau-deep:#2C4C34;
+    --biru:#2C4A6E; --biru-deep:#16293c;
+    --white:#FFFBF2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Nunito',sans-serif;
+    background:
+      radial-gradient(circle at 12% 15%, rgba(44,74,110,0.07) 0, transparent 42%),
+      radial-gradient(circle at 88% 80%, rgba(169,45,45,0.06) 0, transparent 45%),
+      var(--cream);
+    color:var(--ink); min-height:100vh;
+  }
+  h1,h2,h3,.display{ font-family:'Fredoka',sans-serif; }
+  .app{ max-width:900px; margin:0 auto; padding:20px 16px 60px; }
+
+  .teacher-fab{
+    position:fixed; top:14px; right:14px; z-index:50;
+    background:var(--biru); color:var(--white); border:none; border-radius:999px;
+    font-family:'Fredoka',sans-serif; font-size:12px; font-weight:600;
+    padding:9px 16px; cursor:pointer; box-shadow:0 3px 0 var(--biru-deep);
+  }
+
+  /* ---------- GATE ---------- */
+  .gate-wrap{ min-height:80vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .gate-card{
+    background:var(--white); border:3px solid var(--ink); border-radius:22px;
+    box-shadow:6px 6px 0 var(--biru-deep); padding:32px 26px; max-width:420px; width:100%; text-align:center;
+  }
+  .gate-card .medal{
+    width:64px;height:64px;border-radius:50%; margin:0 auto 14px;
+    display:flex;align-items:center;justify-content:center; font-size:30px;
+    background:linear-gradient(160deg,#9fbcd6,var(--biru)); border:2px solid var(--biru-deep);
+  }
+  .gate-card h2{ color:var(--biru-deep); margin:0 0 6px; font-size:22px; }
+  .gate-card p{ font-size:13px; color:#6b5b44; margin-bottom:18px; }
+  .field-label{ text-align:left; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--biru-deep); margin:12px 0 4px; }
+  .gate-card input{
+    font-family:'Nunito',sans-serif; font-size:15px; padding:11px 14px; border-radius:12px;
+    border:2px solid var(--cream-deep); width:100%;
+  }
+  .gate-card input:focus{ outline:none; border-color:var(--emas); }
+  .gate-error{ color:var(--merah-deep); font-size:12px; font-weight:700; margin-top:8px; display:none; }
+
+  /* ---------- HEADER ---------- */
+  header.top{ text-align:center; padding:26px 10px 14px; }
+  header.top .eyebrow{
+    display:inline-block; font-family:'Fredoka',sans-serif; font-size:13px;
+    letter-spacing:2px; text-transform:uppercase; color:var(--biru-deep);
+    background:var(--white); border:2px solid var(--biru); border-radius:999px;
+    padding:5px 16px; margin-bottom:14px;
+  }
+  header.top h1{ font-size:clamp(26px,5.2vw,40px); color:var(--biru-deep); margin:0 0 6px; line-height:1.15; }
+  header.top p{ max-width:560px; margin:0 auto; color:#5a4a36; font-size:14.5px; }
+  .batik-rule{ height:10px; background-image: radial-gradient(circle, var(--emas) 2px, transparent 2.4px); background-size:16px 16px; background-position:center; opacity:0.5; margin:8px 0 20px; }
+
+  /* ---------- CASE MAP (3 bab) ---------- */
+  .cases-map{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:8px; }
+  .case-folder{
+    background:var(--white); border:3px solid var(--emas); border-radius:18px;
+    padding:18px 12px 16px; text-align:center; cursor:pointer; position:relative;
+    box-shadow:0 3px 0 rgba(0,0,0,0.08); transition:transform .15s ease;
+  }
+  .case-folder:hover{ transform:translateY(-4px); }
+  .case-folder.locked{ cursor:not-allowed; opacity:.5; filter:grayscale(.4); }
+  .case-folder.locked:hover{ transform:none; }
+  .case-folder .icon{ font-size:34px; margin-bottom:8px; }
+  .case-folder .bab-no{ font-family:'Fredoka',sans-serif; font-size:11px; color:var(--biru-deep); text-transform:uppercase; letter-spacing:1px; }
+  .case-folder .bab-title{ font-size:12.5px; font-weight:800; line-height:1.3; margin-top:3px; min-height:48px; }
+  .case-folder .score-tag{ margin-top:8px; font-size:12px; font-weight:800; color:var(--hijau-deep); }
+  .lock-icon{ position:absolute; top:8px; right:10px; font-size:14px; }
+
+  /* ---------- PANEL ---------- */
+  .panel{
+    background:var(--white); border:3px solid var(--ink); border-radius:22px;
+    box-shadow:6px 6px 0 var(--biru-deep); padding:26px 24px; margin-top:24px;
+    animation:pop .25s ease;
+  }
+  @keyframes pop{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  .panel .badge-row{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .panel .badge-row .medal{
+    width:46px;height:46px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:22px;
+    background:linear-gradient(160deg,#9fbcd6,var(--biru)); border:2px solid var(--biru-deep); flex-shrink:0;
+  }
+  .panel h2{ margin:0; font-size:21px; color:var(--biru-deep); }
+  .panel .sub{ font-size:12.5px; color:#7a6a52; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+  .progress-bar{ height:10px; border-radius:999px; background:var(--cream-deep); overflow:hidden; margin:14px 0 18px; }
+  .progress-bar > div{ height:100%; background:linear-gradient(90deg,var(--biru),var(--emas)); transition:width .3s ease; }
+  .intro-text{ font-size:14.5px; line-height:1.6; color:#4a3d2c; }
+  .intro-text b{ color:var(--biru-deep); }
+
+  /* ---------- CASE FILE ---------- */
+  .case-file{
+    background:var(--cream); border:2px dashed var(--emas); border-radius:16px;
+    padding:16px 18px; margin-bottom:18px; position:relative;
+  }
+  .case-file .case-tag{
+    font-family:'Fredoka',sans-serif; font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--merah-deep); background:var(--white); border:2px solid var(--merah); border-radius:999px;
+    padding:3px 12px; display:inline-block; margin-bottom:8px;
+  }
+  .case-file .case-title{ font-family:'Fredoka',sans-serif; font-size:16px; color:var(--ink); margin-bottom:6px; }
+  .case-file .case-narrative{ font-size:14.5px; line-height:1.6; color:#4a3d2c; }
+
+  .tier-label{ font-family:'Fredoka',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--biru-deep); margin:14px 0 6px; }
+  .question{ font-size:16px; font-weight:800; margin-bottom:12px; line-height:1.4; }
+  .options{ display:grid; gap:9px; }
+  .opt{
+    text-align:left; border:2.5px solid var(--cream-deep); background:var(--cream);
+    border-radius:14px; padding:11px 15px; font-family:'Nunito',sans-serif; font-size:14.5px; font-weight:700;
+    cursor:pointer; color:var(--ink); transition:all .15s ease;
+  }
+  .opt:hover{ border-color:var(--emas); }
+  .opt.correct{ background:#DDF1E1; border-color:var(--hijau); color:var(--hijau-deep); }
+  .opt.wrong{ background:#F7DEDE; border-color:var(--merah); color:var(--merah-deep); }
+  .opt[disabled]{ cursor:default; }
+
+  .feedback{ margin-top:14px; padding:13px 15px; border-radius:14px; font-size:13.5px; line-height:1.5; font-weight:600; display:none; }
+  .feedback.show{ display:block; animation:pop .2s ease; }
+  .feedback.ok{ background:#DDF1E1; color:var(--hijau-deep); }
+  .feedback.no{ background:#F7DEDE; color:var(--merah-deep); }
+  .stamp{
+    display:inline-block; font-family:'Fredoka',sans-serif; font-weight:700; font-size:13px;
+    padding:4px 12px; border-radius:8px; border:2px solid currentColor; margin-bottom:6px; letter-spacing:1px;
+  }
+
+  .btn{
+    font-family:'Fredoka',sans-serif; font-size:15px; font-weight:600; border:none; border-radius:999px;
+    padding:12px 26px; cursor:pointer; background:var(--biru); color:var(--white);
+    box-shadow:0 4px 0 var(--biru-deep); transition:transform .1s ease;
+  }
+  .btn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--biru-deep); }
+  .btn.secondary{ background:var(--merah); box-shadow:0 4px 0 var(--merah-deep); }
+  .btn.gold{ background:var(--emas); box-shadow:0 4px 0 #93731f; color:var(--ink); }
+  .btn[disabled]{ opacity:.4; cursor:not-allowed; box-shadow:none; }
+  .btn-row{ margin-top:18px; display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap; }
+
+  /* result */
+  .result-wrap{ text-align:center; }
+  .result-wrap .medal-big{
+    width:96px; height:96px; border-radius:50%; margin:6px auto 14px;
+    display:flex; align-items:center; justify-content:center; font-size:44px;
+    background:linear-gradient(160deg,#9fbcd6,var(--biru)); border:3px solid var(--biru-deep);
+  }
+  .score-line{ font-size:16px; font-weight:800; color:var(--hijau-deep); margin:6px 0 18px; }
+  .certificate{
+    border:3px dashed var(--emas); border-radius:16px; padding:20px; margin:18px 0;
+    background: radial-gradient(circle at 10% 10%, rgba(201,154,46,0.08), transparent 40%), radial-gradient(circle at 90% 90%, rgba(44,74,110,0.08), transparent 40%);
+  }
+  .certificate .cert-title{ font-family:'Fredoka',sans-serif; font-size:20px; color:var(--biru-deep); margin-bottom:4px; }
+  .certificate .cert-name{ font-size:22px; font-weight:800; margin:10px 0; border-bottom:2px solid var(--ink); display:inline-block; padding:0 20px 4px; }
+  .certificate .cert-desc{ font-size:13px; color:#6b5b44; }
+  #nameInput{ font-family:'Fredoka',sans-serif; font-size:16px; padding:10px 16px; border-radius:12px; border:2px solid var(--cream-deep); width:100%; max-width:280px; text-align:center; margin:10px 0; }
+
+  /* modal */
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(46,35,23,0.55); z-index:100; align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.show{ display:flex; }
+  .modal-box{ background:var(--white); border:3px solid var(--ink); border-radius:20px; box-shadow:6px 6px 0 var(--biru); max-width:760px; width:100%; max-height:85vh; overflow-y:auto; padding:22px 20px; }
+  .modal-box h2{ color:var(--biru-deep); margin:0 0 4px; font-size:20px; }
+  .modal-box .sub{ font-size:12px; color:#7a6a52; margin-bottom:14px; }
+  table.results{ width:100%; border-collapse:collapse; font-size:12.5px; margin-top:8px; }
+  table.results th, table.results td{ text-align:left; padding:8px 8px; border-bottom:1px solid var(--cream-deep); }
+  table.results th{ font-family:'Fredoka',sans-serif; color:var(--biru-deep); font-size:11.5px; text-transform:uppercase; }
+  table.results tr:last-child td{ border-bottom:none; }
+  .empty-note{ font-size:13px; color:#8a7a5f; padding:16px 0; text-align:center; }
+  .modal-btn-row{ display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+
+  footer{ text-align:center; margin-top:30px; font-size:12px; color:#9a8b70; }
+
+  @media (max-width:640px){
+    .cases-map{ grid-template-columns:1fr; }
+    .panel{ padding:18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="teacher-fab" onclick="openTeacherView()">👩‍🏫 Lihat Hasil Murid</button>
+
+<div id="gateScreen" class="gate-wrap">
+  <div class="gate-card">
+    <div class="medal">🕵️</div>
+    <h2>Sebelum Investigasi Dimulai...</h2>
+    <p>Isi namamu dulu ya, biar Bu/Pak Guru bisa tahu hasil investigasimu!</p>
+    <div class="field-label">Nama Lengkap</div>
+    <input id="gateName" type="text" placeholder="Contoh: Ahmad Fauzi" />
+    <div class="field-label">Kelas</div>
+    <input id="gateClass" type="text" placeholder="Contoh: IX A" />
+    <div class="gate-error" id="gateError">Isi nama dan kelas dulu, ya.</div>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn gold" onclick="submitGate()">Mulai Investigasi ▶</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="appScreen" style="display:none;">
+  <header class="top">
+    <span class="eyebrow">Pendidikan Pancasila &middot; Kelas IX</span>
+    <h1>Detektif Kebangsaan:<br>Investigasi Pancasila</h1>
+    <p>Kamu adalah detektif muda yang bertugas menyelidiki kasus-kasus kehidupan bernegara. Untuk setiap kasus, kamu harus <b>menentukan kesimpulan</b>, lalu <b>membuktikan alasannya</b>. Nalar yang tajam akan membantumu memecahkan setiap kasus!</p>
+  </header>
+
+  <div class="batik-rule"></div>
+
+  <div id="mapScreen">
+    <div class="cases-map" id="casesMap"></div>
+  </div>
+
+  <div id="panelHost"></div>
+
+  <footer>Dibuat untuk mendukung pembelajaran Pancasila &middot; Semangat menyelidiki, para detektif! 🇮🇩</footer>
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal-box">
+    <div id="teacherContent">
+      <h2>👩‍🏫 Rekap Hasil Murid</h2>
+      <div class="sub">Data ini terkumpul otomatis dari semua murid yang menyelesaikan seluruh investigasi.</div>
+      <div id="teacherTableWrap"></div>
+      <div class="modal-btn-row">
+        <button class="btn secondary" onclick="loadTeacherResults()">🔄 Muat Ulang</button>
+        <button class="btn" onclick="closeTeacherView()">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const BAB = [
+  {
+    icon:"📜", name:"Hubungan Pancasila dengan UUD NRI Tahun 1945",
+    intro:"Pancasila adalah dasar filosofis negara, sedangkan UUD NRI Tahun 1945 adalah hukum dasar tertulis yang menjabarkan nilai-nilai Pancasila. Setiap kasus di bab ini akan mengujimu untuk menilai apakah suatu tindakan atau aturan sudah selaras dengan hubungan keduanya.",
+    cases:[
+      { tag:"Kasus 01", title:"Peraturan Desa yang Menyimpang",
+        narrative:"Sebuah desa membuat peraturan yang melarang warga menyampaikan pendapat dalam musyawarah desa dengan alasan menjaga ketertiban. Peraturan ini disahkan sepihak oleh kepala desa tanpa musyawarah dengan warga.",
+        tier1:{ q:"Apakah peraturan desa ini sesuai dengan nilai-nilai Pancasila yang termuat dalam Pembukaan UUD NRI 1945?", options:["Sesuai","Tidak Sesuai"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Karena peraturan desa tidak boleh dibuat oleh kepala desa",
+            "Karena melanggar sila keempat yang menekankan musyawarah dan menghargai pendapat rakyat dalam pengambilan keputusan",
+            "Karena desa tidak memiliki hak membuat peraturan",
+            "Karena ketertiban lebih penting daripada pendapat warga"
+          ], answer:1,
+          explain:"Pancasila, khususnya sila keempat, menjadi dasar filosofis UUD NRI 1945, sehingga setiap produk hukum termasuk peraturan desa harus dibuat secara musyawarah dan menghargai partisipasi rakyat." } },
+      { tag:"Kasus 02", title:"Pembukaan UUD dan Rumusan Pancasila",
+        narrative:"Dalam diskusi kelas, seorang siswa menyatakan bahwa rumusan resmi Pancasila sebagai dasar negara tercantum dalam Batang Tubuh UUD NRI 1945, bukan pada Pembukaannya.",
+        tier1:{ q:"Apakah pernyataan siswa tersebut benar?", options:["Benar","Salah"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Salah, karena rumusan resmi Pancasila justru tercantum dalam alinea keempat Pembukaan UUD NRI 1945",
+            "Benar, karena Batang Tubuh memuat seluruh dasar negara",
+            "Salah, karena Pancasila tidak tercantum di UUD sama sekali",
+            "Benar, karena Pembukaan hanya memuat tujuan negara"
+          ], answer:0,
+          explain:"Rumusan resmi kelima sila Pancasila termuat dalam alinea keempat Pembukaan UUD NRI 1945, yang menjadi sumber dari segala sumber hukum di Indonesia." } },
+      { tag:"Kasus 03", title:"Usulan Mengubah Dasar Negara",
+        narrative:"Dalam forum diskusi mahasiswa, muncul usulan agar Pancasila diubah melalui mekanisme amandemen UUD NRI 1945, sama seperti pasal-pasal lainnya.",
+        tier1:{ q:"Apakah Pancasila dapat diubah melalui mekanisme amandemen seperti pasal UUD lainnya?", options:["Bisa","Tidak Bisa"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Tidak bisa, karena Pancasila adalah dasar negara yang bersifat tetap dan tidak termasuk bagian yang diamandemen",
+            "Bisa, karena semua bagian UUD dapat diamandemen tanpa kecuali",
+            "Tidak bisa, karena amandemen UUD dilarang oleh undang-undang",
+            "Bisa, asal disetujui oleh MPR"
+          ], answer:0,
+          explain:"Pembukaan UUD NRI 1945 yang memuat Pancasila disepakati sebagai bagian yang tidak dapat diubah, karena mengubahnya berarti membubarkan negara hasil proklamasi 1945." } },
+      { tag:"Kasus 04", title:"Rancangan Undang-Undang yang Timpang",
+        narrative:"Sebuah rancangan undang-undang memberikan hak istimewa bagi kelompok tertentu untuk memperoleh pekerjaan di instansi pemerintah, sementara kelompok lain dengan kualifikasi yang sama tidak mendapat kesempatan setara.",
+        tier1:{ q:"Apakah rancangan undang-undang ini selaras dengan Pancasila sebagai dasar penyusunan hukum di Indonesia?", options:["Selaras","Tidak Selaras"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Tidak selaras, karena bertentangan dengan sila kelima tentang keadilan sosial bagi seluruh rakyat Indonesia",
+            "Selaras, karena pemerintah berhak menentukan siapa yang boleh bekerja",
+            "Tidak selaras, karena undang-undang tidak boleh mengatur pekerjaan",
+            "Selaras, karena kelompok tertentu butuh perlindungan khusus"
+          ], answer:0,
+          explain:"Setiap produk hukum, termasuk undang-undang, harus mencerminkan nilai keadilan sosial (sila kelima) sebagai penjabaran dari Pancasila yang menjadi sumber hukum tertinggi." } }
+    ]
+  },
+  {
+    icon:"🕊️", name:"Hubungan Pancasila dengan Bhinneka Tunggal Ika",
+    intro:"Bhinneka Tunggal Ika berarti 'berbeda-beda tetapi tetap satu jua'. Semboyan ini erat kaitannya dengan sila ketiga Pancasila. Selidiki apakah kasus-kasus berikut mencerminkan atau justru bertentangan dengan semangat kebhinnekaan.",
+    cases:[
+      { tag:"Kasus 01", title:"Aturan Bahasa Tunggal di Sekolah",
+        narrative:"Sebuah sekolah dengan siswa dari berbagai suku mewajibkan seluruh siswa hanya boleh menggunakan satu bahasa daerah tertentu saat istirahat, dan melarang penggunaan bahasa daerah lain.",
+        tier1:{ q:"Apakah aturan tersebut sesuai dengan semangat Bhinneka Tunggal Ika?", options:["Sesuai","Tidak Sesuai"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Tidak sesuai, karena Bhinneka Tunggal Ika menekankan penghormatan terhadap keberagaman budaya dan bahasa, bukan penyeragaman",
+            "Sesuai, karena satu bahasa mempermudah komunikasi",
+            "Tidak sesuai, karena sekolah tidak berhak membuat aturan bahasa",
+            "Sesuai, karena keberagaman bahasa menyebabkan perpecahan"
+          ], answer:0,
+          explain:"Bhinneka Tunggal Ika berarti 'berbeda-beda tetapi tetap satu', yang bermakna persatuan dibangun melalui penghormatan atas keberagaman, bukan dengan memaksakan keseragaman." } },
+      { tag:"Kasus 02", title:"Gotong Royong Lintas Agama",
+        narrative:"Warga suatu kompleks perumahan yang terdiri dari pemeluk berbagai agama bergotong royong membersihkan lingkungan menjelang perayaan hari besar salah satu agama, dan saling menjaga keamanan saat ibadah berlangsung.",
+        tier1:{ q:"Apakah kegiatan ini mencerminkan hubungan Pancasila dengan Bhinneka Tunggal Ika?", options:["Mencerminkan","Tidak Mencerminkan"], answer:0 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Mencerminkan, karena menunjukkan persatuan dalam keberagaman sekaligus pengamalan sila ketiga dan semangat Bhinneka Tunggal Ika",
+            "Tidak mencerminkan, karena gotong royong hanya berlaku untuk urusan sosial biasa",
+            "Mencerminkan, karena semua warga menganut agama yang sama",
+            "Tidak mencerminkan, karena melibatkan lebih dari satu agama"
+          ], answer:0,
+          explain:"Sikap saling membantu antarwarga berbeda agama adalah wujud nyata semboyan Bhinneka Tunggal Ika yang selaras dengan sila Persatuan Indonesia." } },
+      { tag:"Kasus 03", title:"Larangan Usaha bagi Pendatang",
+        narrative:"Sekelompok warga di suatu daerah menolak dan melarang pendatang dari suku lain membuka usaha kecil di wilayah mereka, dengan alasan ingin melindungi pedagang asli daerah tersebut.",
+        tier1:{ q:"Apakah tindakan warga tersebut sesuai dengan Bhinneka Tunggal Ika?", options:["Sesuai","Tidak Sesuai"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Tidak sesuai, karena bertentangan dengan semangat persatuan dan kesetaraan antarwarga negara tanpa memandang suku asal",
+            "Sesuai, karena setiap daerah berhak melindungi warganya sendiri",
+            "Tidak sesuai, karena usaha kecil tidak diatur hukum",
+            "Sesuai, karena pendatang seharusnya membuka usaha di daerah asalnya"
+          ], answer:0,
+          explain:"Bhinneka Tunggal Ika menegaskan bahwa setiap warga negara, dari suku manapun, memiliki hak yang sama untuk hidup dan berusaha di seluruh wilayah NKRI." } },
+      { tag:"Kasus 04", title:"Perayaan Budaya Bersama",
+        narrative:"Sebuah kabupaten mengadakan festival tahunan yang menampilkan tarian, musik, dan kuliner dari seluruh suku yang tinggal di wilayah tersebut, termasuk suku pendatang.",
+        tier1:{ q:"Apakah kegiatan festival ini memperkuat hubungan antara Pancasila dan Bhinneka Tunggal Ika?", options:["Memperkuat","Tidak Berkaitan"], answer:0 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Memperkuat, karena menumbuhkan rasa saling menghargai budaya yang berbeda sebagai satu kesatuan bangsa",
+            "Tidak berkaitan, karena festival hanya soal hiburan semata",
+            "Memperkuat, karena hanya budaya mayoritas yang boleh ditampilkan",
+            "Tidak berkaitan, karena budaya daerah bukan urusan pemerintah"
+          ], answer:0,
+          explain:"Festival budaya lintas suku menumbuhkan sikap saling menghargai yang menjadi inti Bhinneka Tunggal Ika, sekaligus penerapan nyata sila Persatuan Indonesia." } }
+    ]
+  },
+  {
+    icon:"🗺️", name:"Hubungan Pancasila dengan Negara Kesatuan Republik Indonesia",
+    intro:"NKRI adalah bentuk final negara Indonesia yang tidak dapat diganggu gugat. Selidiki kasus-kasus berikut untuk memahami bagaimana Pancasila menjaga keutuhan dan kedaulatan NKRI.",
+    cases:[
+      { tag:"Kasus 01", title:"Gerakan Ingin Memisahkan Diri",
+        narrative:"Sekelompok orang di suatu wilayah mendeklarasikan keinginan memisahkan diri dari Indonesia dan membentuk negara sendiri karena merasa pembangunan di daerah mereka tertinggal.",
+        tier1:{ q:"Apakah tindakan tersebut sejalan dengan Pancasila dan NKRI?", options:["Sejalan","Tidak Sejalan"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Tidak sejalan, karena mengancam keutuhan wilayah NKRI; ketimpangan pembangunan seharusnya diselesaikan melalui dialog dan kebijakan, bukan pemisahan diri",
+            "Sejalan, karena setiap daerah berhak merdeka jika merasa dirugikan",
+            "Tidak sejalan, karena pemisahan diri melanggar hukum internasional semata",
+            "Sejalan, karena pembangunan yang tidak merata membenarkan pemisahan"
+          ], answer:0,
+          explain:"NKRI adalah bentuk final negara Indonesia yang tidak dapat diganggu gugat; ketimpangan pembangunan harus diselesaikan melalui musyawarah dan pemerataan, sesuai semangat sila ketiga dan keempat Pancasila." } },
+      { tag:"Kasus 02", title:"Otonomi Daerah",
+        narrative:"Sebuah provinsi diberikan kewenangan mengatur urusan pemerintahannya sendiri melalui otonomi daerah, namun tetap tunduk pada peraturan perundang-undangan nasional dan menjaga hubungan dengan pemerintah pusat.",
+        tier1:{ q:"Apakah otonomi daerah semacam ini sesuai dengan prinsip NKRI?", options:["Sesuai","Tidak Sesuai"], answer:0 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Sesuai, karena otonomi daerah bertujuan mempercepat pembangunan lokal tanpa memisahkan diri dari kesatuan NKRI",
+            "Tidak sesuai, karena otonomi daerah sama saja dengan federalisme",
+            "Sesuai, karena daerah otonom boleh membentuk negara sendiri",
+            "Tidak sesuai, karena hanya pemerintah pusat yang boleh mengatur daerah"
+          ], answer:0,
+          explain:"Otonomi daerah dalam NKRI memberi kewenangan mengatur urusan lokal, tetapi tetap dalam bingkai negara kesatuan, bukan federasi atau negara berdaulat sendiri." } },
+      { tag:"Kasus 03", title:"Peran TNI Menjaga Perbatasan",
+        narrative:"Prajurit TNI ditugaskan menjaga wilayah perbatasan negara dari ancaman penyusupan dan pelanggaran kedaulatan oleh pihak luar.",
+        tier1:{ q:"Apakah tugas ini berkaitan dengan hubungan Pancasila dan NKRI?", options:["Berkaitan","Tidak Berkaitan"], answer:0 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Berkaitan, karena menjaga keutuhan wilayah adalah wujud pengamalan sila Persatuan Indonesia demi mempertahankan NKRI",
+            "Tidak berkaitan, karena itu murni tugas militer semata",
+            "Berkaitan, karena TNI bertugas mengatur pemerintahan daerah",
+            "Tidak berkaitan, karena wilayah perbatasan bukan bagian dari NKRI"
+          ], answer:0,
+          explain:"Menjaga kedaulatan dan keutuhan wilayah negara merupakan wujud nyata pengamalan sila Persatuan Indonesia dalam mempertahankan NKRI." } },
+      { tag:"Kasus 04", title:"Konflik Sumber Daya Alam Antardaerah",
+        narrative:"Dua daerah berselisih memperebutkan hak pengelolaan sumber daya alam di wilayah perbatasan mereka, hingga memicu ketegangan antarwarga.",
+        tier1:{ q:"Apa langkah yang paling sesuai dengan nilai Pancasila untuk menjaga keutuhan NKRI dalam kasus ini?", options:["Disepakati sendiri secara sepihak oleh daerah yang lebih kuat","Diselesaikan lewat dialog dan mekanisme hukum bersama pemerintah pusat"], answer:1 },
+        tier2:{ q:"Alasan yang paling tepat adalah...", options:[
+            "Karena penyelesaian melalui musyawarah dan hukum nasional mencerminkan sila keempat serta menjaga persatuan dan keutuhan wilayah NKRI",
+            "Karena daerah yang lebih kuat memang berhak menguasai sumber daya tersebut",
+            "Karena pemerintah pusat tidak perlu dilibatkan dalam urusan daerah",
+            "Karena konflik semacam ini tidak berkaitan dengan Pancasila"
+          ], answer:0,
+          explain:"Musyawarah dan penyelesaian hukum yang melibatkan pemerintah pusat mencerminkan sila keempat dan menjaga persatuan yang menjadi fondasi keutuhan NKRI." } }
+    ]
+  }
+];
+
+/* ---------------- STATE ---------------- */
+let babProgress = BAB.map(()=>({ done:false, score:0, max:0 }));
+let currentBab = null;
+let caseIndex = 0;
+let stage = "narrative"; // narrative -> tier1 -> tier2 -> feedback
+let tier1Correct = false;
+let babScore = 0;
+let studentName = "";
+let studentClass = "";
+
+const casesMap = document.getElementById('casesMap');
+const panelHost = document.getElementById('panelHost');
+
+/* ---------------- GATE ---------------- */
+function submitGate(){
+  const name = document.getElementById('gateName').value.trim();
+  const cls = document.getElementById('gateClass').value.trim();
+  const err = document.getElementById('gateError');
+  if(!name || !cls){ err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  studentName = name; studentClass = cls;
+  document.getElementById('gateScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  renderMap();
+}
+
+/* ---------------- MAP ---------------- */
+function renderMap(){
+  casesMap.innerHTML = "";
+  BAB.forEach((b,i)=>{
+    const locked = i>0 && !babProgress[i-1].done;
+    const div = document.createElement('div');
+    div.className = 'case-folder' + (locked?' locked':'');
+    div.innerHTML = `
+      ${locked?'<span class="lock-icon">🔒</span>':''}
+      <div class="icon">${b.icon}</div>
+      <div class="bab-no">Bab Investigasi ${i+1}</div>
+      <div class="bab-title">${b.name}</div>
+      <div class="score-tag">${babProgress[i].done ? '✔ ' + babProgress[i].score + ' / ' + babProgress[i].max + ' poin' : '&nbsp;'}</div>
+    `;
+    if(!locked) div.addEventListener('click', ()=> startBab(i));
+    casesMap.appendChild(div);
+  });
+}
+
+function startBab(i){
+  currentBab = i;
+  caseIndex = 0;
+  babScore = 0;
+  renderIntro();
+}
+
+function renderIntro(){
+  const b = BAB[currentBab];
+  panelHost.innerHTML = `
+    <div class="panel">
+      <div class="badge-row">
+        <div class="medal">${b.icon}</div>
+        <div>
+          <div class="sub">Bab Investigasi ${currentBab+1}</div>
+          <h2>${b.name}</h2>
+        </div>
+      </div>
+      <p class="intro-text">${b.intro}</p>
+      <p class="intro-text">Ada <b>${b.cases.length} kasus</b> untuk diselidiki. Tiap kasus punya 2 tahap: <b>menentukan kesimpulan</b>, lalu <b>membuktikan alasan</b> yang tepat.</p>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="backToMap()">Kembali ke Peta Kasus</button>
+        <button class="btn gold" onclick="renderCase()">Mulai Investigasi 🔍</button>
+      </div>
+    </div>
+  `;
+  panelHost.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function renderCase(){
+  stage = "tier1";
+  tier1Correct = false;
+  const b = BAB[currentBab];
+  const c = b.cases[caseIndex];
+  const pct = Math.round((caseIndex/b.cases.length)*100);
+  panelHost.innerHTML = `
+    <div class="panel">
+      <div class="badge-row">
+        <div class="medal">${b.icon}</div>
+        <div>
+          <div class="sub">${b.name}</div>
+          <h2>Kasus ${caseIndex+1} dari ${b.cases.length}</h2>
+        </div>
+      </div>
+      <div class="progress-bar"><div style="width:${pct}%"></div></div>
+      <div class="case-file">
+        <span class="case-tag">${c.tag}</span>
+        <div class="case-title">${c.title}</div>
+        <div class="case-narrative">${c.narrative}</div>
+      </div>
+      <div class="tier-label">Tahap 1 &middot; Kesimpulan</div>
+      <div class="question">${c.tier1.q}</div>
+      <div class="options" id="tier1Wrap">
+        ${c.tier1.options.map((opt,idx)=>`<button class="opt" data-idx="${idx}">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="feedback1"></div>
+      <div id="tier2Zone"></div>
+      <div class="btn-row" id="btnRow"></div>
+    </div>
+  `;
+  document.querySelectorAll('#tier1Wrap .opt').forEach(btn=>{
+    btn.addEventListener('click', ()=> selectTier1(parseInt(btn.dataset.idx)));
+  });
+  panelHost.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function selectTier1(idx){
+  const b = BAB[currentBab];
+  const c = b.cases[caseIndex];
+  const buttons = document.querySelectorAll('#tier1Wrap .opt');
+  if(buttons[0].disabled) return;
+  buttons.forEach((btn,i)=>{
+    btn.disabled = true;
+    if(i===c.tier1.answer) btn.classList.add('correct');
+    else if(i===idx) btn.classList.add('wrong');
+  });
+  tier1Correct = (idx===c.tier1.answer);
+  const fb = document.getElementById('feedback1');
+  fb.className = 'feedback show ' + (tier1Correct?'ok':'no');
+  fb.innerHTML = tier1Correct ? '✅ Kesimpulanmu tepat! Lanjut buktikan alasannya.' : '❌ Kesimpulan ini masih perlu diselidiki ulang. Tetap lanjut ke tahap pembuktian, ya.';
+
+  // render tier 2 immediately below
+  const tier2Zone = document.getElementById('tier2Zone');
+  tier2Zone.innerHTML = `
+    <div class="tier-label" style="margin-top:18px;">Tahap 2 &middot; Pembuktian Alasan</div>
+    <div class="question">${c.tier2.q}</div>
+    <div class="options" id="tier2Wrap">
+      ${c.tier2.options.map((opt,i2)=>`<button class="opt" data-idx="${i2}">${opt}</button>`).join('')}
+    </div>
+    <div class="feedback" id="feedback2"></div>
+  `;
+  document.querySelectorAll('#tier2Wrap .opt').forEach(btn=>{
+    btn.addEventListener('click', ()=> selectTier2(parseInt(btn.dataset.idx)));
+  });
+  document.getElementById('btnRow').innerHTML = `<button class="btn" id="nextCaseBtn" disabled onclick="nextCase()">Lanjut Kasus Berikutnya ▶</button>`;
+}
+
+function selectTier2(idx){
+  const b = BAB[currentBab];
+  const c = b.cases[caseIndex];
+  const buttons = document.querySelectorAll('#tier2Wrap .opt');
+  if(buttons[0].disabled) return;
+  buttons.forEach((btn,i)=>{
+    btn.disabled = true;
+    if(i===c.tier2.answer) btn.classList.add('correct');
+    else if(i===idx) btn.classList.add('wrong');
+  });
+  const tier2Correct = (idx===c.tier2.answer);
+  let pts = 0;
+  if(tier1Correct && tier2Correct) pts = 2;
+  else if(tier1Correct || tier2Correct) pts = 1;
+  babScore += pts;
+
+  const fb = document.getElementById('feedback2');
+  fb.className = 'feedback show ' + (tier2Correct?'ok':'no');
+  const stampText = pts===2 ? 'KASUS TERPECAHKAN' : (pts===1 ? 'BUKTI BELUM LENGKAP' : 'PERLU DISELIDIKI ULANG');
+  fb.innerHTML = `<span class="stamp">${stampText} &middot; +${pts} poin</span><br>${c.tier2.explain}`;
+  document.getElementById('nextCaseBtn').disabled = false;
+}
+
+function nextCase(){
+  const b = BAB[currentBab];
+  if(caseIndex < b.cases.length-1){
+    caseIndex++;
+    renderCase();
+  } else {
+    finishBab();
+  }
+}
+
+function finishBab(){
+  const b = BAB[currentBab];
+  const maxScore = b.cases.length*2;
+  babProgress[currentBab] = { done:true, score:babScore, max:maxScore };
+  renderMap();
+
+  const perfect = babScore===maxScore;
+  panelHost.innerHTML = `
+    <div class="panel result-wrap">
+      <div class="medal-big">${perfect? '🏅' : b.icon}</div>
+      <h2>${perfect? 'Semua Kasus Terpecahkan!' : 'Bab Investigasi Selesai!'}</h2>
+      <div class="score-line">Skor kamu: ${babScore} dari ${maxScore} poin</div>
+      <div class="btn-row" style="justify-content:center; margin-top:22px;">
+        <button class="btn secondary" onclick="backToMap()">Kembali ke Peta Kasus</button>
+        ${currentBab < BAB.length-1 ? `<button class="btn gold" onclick="startBab(${currentBab+1})">Bab Berikutnya ▶</button>` : `<button class="btn" onclick="renderFinalResult()">Lihat Sertifikat 🎓</button>`}
+      </div>
+    </div>
+  `;
+}
+
+function backToMap(){
+  panelHost.innerHTML = '';
+  renderMap();
+}
+
+function renderFinalResult(){
+  const totalScore = babProgress.reduce((a,p)=>a+p.score,0);
+  const maxScore = babProgress.reduce((a,p)=>a+p.max,0);
+  saveFinalResult(totalScore, maxScore);
+
+  let title, desc;
+  const pctScore = totalScore/maxScore;
+  if(pctScore===1){ title="Detektif Kebangsaan Utama"; desc="Nalarmu tajam! Kamu memahami hubungan Pancasila dengan UUD 1945, Bhinneka Tunggal Ika, dan NKRI secara menyeluruh."; }
+  else if(pctScore>=0.7){ title="Detektif Kebangsaan Andal"; desc="Kemampuan analisismu terhadap kasus kebangsaan sudah sangat baik!"; }
+  else { title="Detektif Kebangsaan Pemula"; desc="Teruslah berlatih menganalisis kasus agar nalar kebangsaanmu makin tajam."; }
+
+  panelHost.innerHTML = `
+    <div class="panel result-wrap">
+      <div class="medal-big">🎉</div>
+      <h2>Selamat, Semua Investigasi Selesai!</h2>
+      <div class="score-line">Total skor: ${totalScore} / ${maxScore} poin</div>
+      <div class="certificate">
+        <div class="cert-title">🎓 Piagam Detektif Kebangsaan</div>
+        <div style="font-size:13px; color:#6b5b44;">diberikan kepada</div>
+        <input id="nameInput" type="text" placeholder="Tulis namamu di sini" />
+        <div class="cert-name" id="certName">Nama Detektif</div>
+        <div style="font-family:'Fredoka',sans-serif; font-size:17px; color:var(--biru-deep); margin-top:4px;">${title}</div>
+        <div class="cert-desc">${desc}</div>
+      </div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn secondary" onclick="restartAll()">Investigasi Lagi dari Awal</button>
+      </div>
+    </div>
+  `;
+  const inp = document.getElementById('nameInput');
+  const certName = document.getElementById('certName');
+  inp.value = studentName;
+  certName.textContent = studentName || 'Nama Detektif';
+  inp.addEventListener('input', ()=>{ certName.textContent = inp.value.trim() || 'Nama Detektif'; });
+}
+
+function restartAll(){
+  babProgress = BAB.map(()=>({ done:false, score:0, max:0 }));
+  panelHost.innerHTML = '';
+  renderMap();
+}
+
+/* ---------------- SAVE RESULT (untuk guru) ---------------- */
+async function saveFinalResult(totalScore, maxScore){
+  try{
+    const key = 'hasilIX:' + Date.now() + '-' + Math.random().toString(36).slice(2,7);
+    const payload = {
+      nama: studentName, kelas: studentClass,
+      totalScore, maxScore,
+      perBab: BAB.map((b,i)=> ({ nama: b.name, skor: babProgress[i].score, max: babProgress[i].max })),
+      waktu: new Date().toISOString()
+    };
+    await window.storage.set(key, JSON.stringify(payload), true);
+  }catch(e){ console.error('Gagal menyimpan hasil:', e); }
+}
+
+/* ---------------- TEACHER VIEW ---------------- */
+async function openTeacherView(){
+  document.getElementById('teacherModal').classList.add('show');
+  await loadTeacherResults();
+}
+function closeTeacherView(){
+  document.getElementById('teacherModal').classList.remove('show');
+}
+async function loadTeacherResults(){
+  const wrap = document.getElementById('teacherTableWrap');
+  wrap.innerHTML = '<div class="empty-note">Memuat data...</div>';
+  try{
+    const list = await window.storage.list('hasilIX:', true);
+    const keys = (list && list.keys) ? list.keys : [];
+    if(keys.length === 0){
+      wrap.innerHTML = '<div class="empty-note">Belum ada murid yang menyelesaikan investigasi ini.</div>';
+      return;
+    }
+    const results = [];
+    for(const k of keys){
+      try{
+        const r = await window.storage.get(k, true);
+        if(r && r.value) results.push(JSON.parse(r.value));
+      }catch(e){ /* skip */ }
+    }
+    results.sort((a,b)=> new Date(b.waktu) - new Date(a.waktu));
+    let rows = results.map(r=>{
+      const tgl = new Date(r.waktu);
+      const tglStr = tgl.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) + ' ' + tgl.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+      return `<tr><td>${escapeHtml(r.nama)}</td><td>${escapeHtml(r.kelas)}</td><td>${r.totalScore} / ${r.maxScore}</td><td>${tglStr}</td></tr>`;
+    }).join('');
+    wrap.innerHTML = `
+      <table class="results">
+        <thead><tr><th>Nama</th><th>Kelas</th><th>Skor</th><th>Waktu Selesai</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }catch(e){
+    wrap.innerHTML = '<div class="empty-note">Gagal memuat data. Coba muat ulang.</div>';
+  }
+}
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
